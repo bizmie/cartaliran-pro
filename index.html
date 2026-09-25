@@ -528,6 +528,9 @@
                 </h3>
                 <div class="flex gap-2">
                     <button onclick="closeTablePreview()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-bold text-gray-700 transition-all">Tutup</button>
+                    <button onclick="executeTableWord()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> MS Word
+                    </button>
                     <button onclick="executeTablePDF()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg transition-all">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Muat Turun PDF
                     </button>
@@ -802,6 +805,7 @@
         window.generateTablePDF = generateTablePDF;
         window.closeTablePreview = closeTablePreview;
         window.executeTablePDF = executeTablePDF;
+        window.executeTableWord = executeTableWord;
         window.openChartPreview = openChartPreview;
         window.closeChartPreview = closeChartPreview;
         window.executeChartPDF = executeChartPDF;
@@ -1736,6 +1740,47 @@
                     hideExportOverlay();
                 });
             }, 500); 
+        }
+
+        function executeTableWord() {
+            showExportOverlay("Mengeksport Jadual (MS Word)...");
+            
+            setTimeout(() => {
+                const element = document.getElementById('pdf-table-content');
+                const htmlContent = element.innerHTML;
+                
+                // Pengepala XML khas yang memberitahu MS Word cara membaca format HTML jadual ini
+                // DITAMBAH: Gaya <style> global untuk memastikan fon (Inter/Arial) terpakai pada seluruh MS Word.
+                const header = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>Jadual SOP</title>
+                    <style>
+                        body, table, td, th, p, h3, h4 { font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important; }
+                    </style>
+                </head>
+                <body>`;
+                const footer = "</body></html>";
+                
+                const sourceHTML = header + htmlContent + footer;
+                
+                // Menggunakan Blob supaya serasi dengan aksara khas dan mengelakkan had saiz URI
+                const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = (activeTabName || 'Aktiviti_1') + '_Jadual_SOP.doc';
+                
+                document.body.appendChild(link);
+                link.click();
+                
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                hideExportOverlay();
+            }, 500);
         }
 
         function openChartPreview() {
