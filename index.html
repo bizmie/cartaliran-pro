@@ -109,20 +109,35 @@
         /* 2. BENTUK (SHAPES) */
         .shape-container { display: flex; justify-content: center; position: relative; z-index: 20; }
         .shape-wrapper {
-            position: relative; display: flex; align-items: center; justify-content: center;
-            text-align: center; font-size: 11px; font-weight: bold; z-index: 20; background: white;
+            position: relative; text-align: center; font-size: 11px; font-weight: bold; z-index: 20; background: white;
+            box-sizing: border-box; overflow: visible;
         }
         
-        .shape-mula-tamat { width: 70px; height: 30px; border: 1.5px solid black; border-radius: 20px; background: white; }
-        .shape-proses { width: 100px; min-height: 40px; border: 1.5px solid black; padding: 6px; background-color: #fff; }
+        /* Kaedah Mutlak (Block + Line-Height) untuk Kestabilan html2canvas */
+        .shape-mula-tamat { 
+            width: 70px; height: 30px; 
+            border: 1.5px solid black; border-radius: 20px; background: white; 
+            padding: 0; margin: 0;
+            display: block !important; 
+            line-height: 27px; 
+        }
+        .shape-mula-tamat span { display: inline-block; vertical-align: top; }
+        
+        .shape-proses { 
+            width: 100px; min-height: 40px; border: 1.5px solid black; padding: 6px; background-color: #fff; 
+            display: block !important; 
+        }
         
         .shape-proses.bg-kuning { background-color: #fef08a; } 
         .shape-proses.bg-merah { background-color: #fee2e2; border-color: #ef4444; } 
         .shape-proses.bg-biru { background-color: #e0f2fe; border-color: #3b82f6; } 
 
-        .shape-keputusan-container { width: 100px; height: 60px; position: relative; display: flex; align-items: center; justify-content: center; z-index: 20; }
-        .shape-keputusan-diamond { position: absolute; width: 45px; height: 45px; border: 1.5px solid black; transform: rotate(45deg); background: white; z-index: 10; }
-        .shape-keputusan-text { position: relative; z-index: 20; max-width: 60px; font-size: 10px; font-weight: bold; text-align: center; line-height: 1.1; }
+        .shape-keputusan-container { width: 100px; height: 60px; position: relative; display: block; margin: 0 auto; z-index: 20; }
+        .shape-keputusan-diamond { position: absolute; top: 7.5px; left: 27.5px; width: 45px; height: 45px; border: 1.5px solid black; transform: rotate(45deg); background: white; z-index: 10; }
+        .shape-keputusan-text { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 20; width: 65px; font-size: 10px; font-weight: bold; text-align: center; line-height: 1.1; 
+        }
         
         /* SCROLLBAR & INPUTS */
         .tabs-container::-webkit-scrollbar { height: 4px; }
@@ -205,7 +220,6 @@
     </div>
     <!-- TAMAT SKRIN LOG MASUK -->
 
-
     <!-- TOP HEADER UTAMA -->
     <header class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm z-50 shrink-0">
         <div class="flex items-center gap-3">
@@ -232,9 +246,12 @@
             </div>
             
             <div class="hidden md:flex items-center gap-3">
-                <div class="text-right">
-                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider flex items-center justify-end gap-1"><svg class="w-3 h-3 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"></path></svg> Profil Awan</div>
-                    <div class="text-sm font-bold text-blue-900" id="current-user-display">...</div>
+                <div class="text-right cursor-pointer group" onclick="openProfileSettings()" title="Tetapkan Kata Laluan Profil">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider flex items-center justify-end gap-1 group-hover:text-blue-500 transition-colors">
+                        <svg class="w-3 h-3 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"></path></svg> 
+                        Profil Awan ⚙️
+                    </div>
+                    <div class="text-sm font-bold text-blue-900 group-hover:text-blue-600 transition-colors" id="current-user-display">...</div>
                 </div>
                 <button onclick="logout()" class="p-2 bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-500 border border-gray-200 hover:border-red-200 rounded-lg transition-all" title="Tukar Pengguna (Log Keluar)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
@@ -405,14 +422,14 @@
     </div>
 
     <!-- MODAL PINTAR -->
-    <div id="custom-modal" class="fixed inset-0 bg-blue-900/40 z-[100] hidden flex items-center justify-center backdrop-blur-sm transition-opacity opacity-0 pointer-events-none duration-300">
+    <div id="custom-modal" class="fixed inset-0 bg-blue-900/40 z-[2000] hidden flex items-center justify-center backdrop-blur-sm transition-opacity opacity-0 pointer-events-none duration-300">
         <div class="bg-white rounded-2xl shadow-2xl p-6 w-[550px] max-w-[95%] transform scale-95 transition-transform duration-300 relative border-t-4 border-blue-600" id="custom-modal-box">
             <h3 id="modal-title" class="text-xl font-black text-blue-900 mb-2">Tajuk</h3>
             <p id="modal-msg" class="text-sm text-gray-500 mb-5 leading-relaxed font-medium">Mesej</p>
             
             <div id="modal-inputs-container" class="space-y-4 mb-6 hidden">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Nama Aktiviti</label>
+                    <label class="block text-xs font-bold text-gray-700 mb-1" id="modal-input-label">Nama Aktiviti</label>
                     <input type="text" id="modal-input" class="w-full border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 font-bold text-sm bg-gray-50">
                 </div>
                 <div id="modal-desc-wrapper">
@@ -421,7 +438,10 @@
                 </div>
             </div>
             
-            <div class="flex justify-end gap-3" id="modal-actions"></div>
+            <div class="flex justify-between items-center w-full mt-6">
+                <div id="modal-actions-left"></div>
+                <div class="flex justify-end gap-3" id="modal-actions"></div>
+            </div>
         </div>
     </div>
 
@@ -525,7 +545,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // Identiti App (Mematuhi Peraturan Cloud Storage)
+        // Identiti App (Kekalkan setup ini supaya serasi dengan komputer anda)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'flowchart-pro-cloud';
 
         // Variabel Sesi Kerja (Local Cache)
@@ -602,7 +622,6 @@
                 if(db_users[currentUser]) {
                     initializeWorkspace();
                 } else {
-                    // Kalau login panggil dari localstorage (auto-login next sesssion)
                     login(currentUser);
                 }
             }
@@ -617,12 +636,8 @@
         }
 
         async function login(username) {
-            if(!auth.currentUser) return; // Guard clause
+            if(!auth.currentUser) return; 
             
-            currentUser = username;
-            localStorage.setItem('flowchart_current_user', currentUser);
-            
-            // Tunjuk overlay loading sementara muat turun data dari Cloud
             document.getElementById('login-overlay').classList.remove('hidden', 'opacity-0');
             document.getElementById('cloud-loading').classList.remove('hidden');
             document.getElementById('cloud-loading').innerHTML = `
@@ -630,32 +645,40 @@
                 <h2 class="text-white font-bold text-xl tracking-wide">Memuat Turun Profil...</h2>
             `;
             
-            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', currentUser);
+            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', username);
             const userSnap = await getDoc(userRef);
+            let fetchedData = null;
             
             if (userSnap.exists()) {
-                db_users[currentUser] = userSnap.data();
-            } else {
-                // MIGRASI DARI LOCAL KE CLOUD (JIKA ADA)
-                let local_db = JSON.parse(localStorage.getItem('flowchart_users_db') || '{}');
-                let oldTabs = localStorage.getItem('flowchart_tabs');
+                fetchedData = userSnap.data();
                 
-                if (local_db[currentUser]) {
-                     db_users[currentUser] = local_db[currentUser]; // Guna data local yang pernah disimpan
-                } else if (currentUser === 'Pengguna Asal' && oldTabs) {
-                     // Pindahkan data v1.25 lama
-                     db_users[currentUser] = {
-                         tabs: JSON.parse(oldTabs),
-                         meta: JSON.parse(localStorage.getItem('flowchart_meta') || '{}')
-                     };
-                } else {
-                     // Profil Kosong Baharu
-                     db_users[currentUser] = { tabs: { 'Aktiviti 1': [] }, meta: { 'Aktiviti 1': '' } };
+                if(fetchedData.password) {
+                    document.getElementById('cloud-loading').classList.add('hidden');
+                    
+                    openModal('Kunci Keselamatan', `Profil <b>${username}</b> dilindungi dengan kata laluan. Sila masukkan:`, 'prompt-password', '', '', async (res) => {
+                        if (res && res.name === fetchedData.password) {
+                            finalizeLogin(username, fetchedData);
+                        } else if (res !== false) {
+                            openModal('Ralat', 'Kata laluan salah. Akses ditolak.', 'alert');
+                            document.getElementById('login-username').value = '';
+                        }
+                    });
+                    return; 
                 }
-                
-                // Simpan profil baharu ke awan
-                await setDoc(userRef, db_users[currentUser]);
+            } else {
+                fetchedData = { tabs: { 'Aktiviti 1': [] }, meta: { 'Aktiviti 1': '' }, tabOrder: ['Aktiviti 1'] };
             }
+            
+            finalizeLogin(username, fetchedData);
+        }
+
+        async function finalizeLogin(username, data) {
+            currentUser = username;
+            localStorage.setItem('flowchart_current_user', currentUser);
+            db_users[currentUser] = data;
+            
+            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', currentUser);
+            await setDoc(userRef, db_users[currentUser], {merge: true});
             
             document.getElementById('cloud-loading').classList.add('hidden');
             checkAuthUI();
@@ -681,7 +704,7 @@
             });
         }
 
-        // PENGHUBUNG KEPADA HTML (Kerana Type=Module mengunci fungsi dalam skop tertutup)
+        // PENGHUBUNG KEPADA HTML
         window.handleLogin = handleLogin;
         window.login = login;
         window.logout = logout;
@@ -706,9 +729,11 @@
         window.switchTab = switchTab;
         window.renameTab = renameTab;
         window.deleteTab = deleteTab;
+        window.moveTab = moveTab;
         window.addNewTab = addNewTab;
         window.closeModal = closeModal;
         window.handleCanvasScroll = handleCanvasScroll;
+        window.openProfileSettings = openProfileSettings;
 
         // --- SISTEM KERJA CARTA (FUNGSI UTAMA) ---
 
@@ -721,11 +746,14 @@
                 db_users[currentUser].tabs = userTabs;
                 flowchart_meta['Aktiviti 1'] = '';
                 db_users[currentUser].meta = flowchart_meta;
+                db_users[currentUser].tabOrder = ['Aktiviti 1'];
                 autoSave();
+            } else if (!db_users[currentUser].tabOrder) {
+                db_users[currentUser].tabOrder = Object.keys(userTabs);
             }
             
             renderTabs();
-            performSwitch(Object.keys(userTabs)[0]);
+            performSwitch(db_users[currentUser].tabOrder[0]);
             toggleFormFields();
         }
 
@@ -747,13 +775,12 @@
         async function autoSave() {
             if(!activeTabName || isProgrammaticChange || !currentUser || !auth.currentUser) return;
             
-            // Local Cache Sync
             db_users[currentUser].tabs[activeTabName] = steps;
             db_users[currentUser].meta = flowchart_meta;
+            if(!db_users[currentUser].tabOrder) db_users[currentUser].tabOrder = Object.keys(db_users[currentUser].tabs);
             
             setSaveStatus(false);
             
-            // Debounce Cloud Sync (Jimatkan transaksi Firebase)
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
                 try {
@@ -768,8 +795,6 @@
                 }
             }, 800); 
         }
-
-        // [FUNGSI UNDO/REDO DAN KAWALAN NOD KEKAL SAMA SEPERTI VERSI SEBELUM INI]
 
         function updateUndoRedoUI() {
             document.getElementById('btn-undo').disabled = (historyIndex <= 0);
@@ -1003,8 +1028,8 @@
         }
 
         function buildShapeHtml(step, isDraft = false) {
-            if (step.type === 'mula') return `<div class="shape-wrapper shape-mula-tamat min-w-[70px]">Mula</div>`;
-            if (step.type === 'tamat') return `<div class="shape-wrapper shape-mula-tamat min-w-[70px]">Tamat</div>`;
+            if (step.type === 'mula') return `<div class="shape-wrapper shape-mula-tamat min-w-[70px]"><span>Mula</span></div>`;
+            if (step.type === 'tamat') return `<div class="shape-wrapper shape-mula-tamat min-w-[70px]"><span>Tamat</span></div>`;
             if (step.type === 'keputusan') {
                 let lbl = isDraft && !step.prosesKerja ? 'Syarat' : step.prosesKerja;
                 return `<div class="shape-keputusan-container min-w-[100px]"><div class="shape-keputusan-diamond"></div><div class="shape-keputusan-text">${lbl}</div></div>`;
@@ -1216,19 +1241,39 @@
         function renderTabs() {
             const tabsBar = document.getElementById('tabs-bar');
             let userTabs = db_users[currentUser].tabs;
-            const tabNames = Object.keys(userTabs);
+            
+            let tabNames = db_users[currentUser].tabOrder;
+            if (!tabNames || tabNames.length === 0) {
+                tabNames = Object.keys(userTabs);
+                db_users[currentUser].tabOrder = tabNames; 
+            }
             
             tabsBar.innerHTML = '';
-            tabNames.forEach(name => {
+            tabNames.forEach((name, index) => {
                 const isActive = (name === activeTabName);
-                const activeClass = isActive ? 'bg-blue-600 text-white rounded-xl shadow-md border border-blue-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 rounded-xl border border-gray-200 cursor-pointer hover:text-gray-700';
-                let controls = isActive ? `
-                        <button onclick="event.stopPropagation(); renameTab('${name}')" class="ml-3 text-blue-200 hover:text-white transition-colors" title="Ubah Nama & Maklumat"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
-                        <button onclick="event.stopPropagation(); deleteTab('${name}')" class="ml-2 text-blue-200 hover:text-red-300 transition-colors" title="Padam Carta"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                const activeClass = isActive 
+                    ? 'bg-blue-600 text-white rounded-xl shadow-md border border-blue-700' 
+                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200 rounded-xl border border-gray-200 hover:text-gray-700 cursor-pointer';
+                
+                let controlsHover = isActive ? `
+                        <div class="absolute inset-0 flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-600 rounded-xl z-20 px-1">
+                            <button onclick="event.stopPropagation(); moveTab('${name}', 'left')" class="p-1 text-white hover:text-blue-200 hover:scale-110 transition-all" title="Gerak ke Kiri"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button>
+                            <button onclick="event.stopPropagation(); moveTab('${name}', 'right')" class="p-1 text-white hover:text-blue-200 hover:scale-110 transition-all" title="Gerak ke Kanan"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+                            <div class="w-px h-4 bg-blue-400/50 mx-1"></div>
+                            <button onclick="event.stopPropagation(); renameTab('${name}')" class="p-1 text-white hover:text-blue-200 hover:scale-110 transition-all" title="Pinda Maklumat"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
+                        </div>
                     ` : '';
-                tabsBar.innerHTML += `<div class="mr-1 font-bold text-[11px] flex items-center transition-all min-w-[120px] max-w-[280px] py-2 px-4 ${activeClass}" onclick="switchTab('${name}')"><span class="truncate flex-grow pointer-events-none tracking-wide">${name}</span>${controls}</div>`;
+                
+                let titleHover = isActive ? 'group-hover:opacity-0 transition-opacity duration-300' : '';
+
+                tabsBar.innerHTML += `
+                    <div class="group relative mr-1 font-bold text-[11px] flex items-center justify-center transition-all duration-300 w-[150px] py-2 px-2 overflow-hidden ${activeClass}" 
+                         onclick="switchTab('${name}')">
+                        <span class="truncate pointer-events-none tracking-wide z-10 relative ${titleHover}">${name}</span>
+                        ${controlsHover}
+                    </div>`;
             });
-            tabsBar.innerHTML += `<button onclick="addNewTab()" class="ml-1 px-4 py-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 border border-gray-200 border-dashed rounded-xl font-bold text-[11px] flex items-center transition-all bg-white"><svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Carta Baru</button>`;
+            tabsBar.innerHTML += `<button onclick="addNewTab()" class="ml-1 px-4 h-[36px] text-gray-500 hover:text-blue-600 hover:bg-blue-50 border border-gray-200 border-dashed rounded-xl font-bold text-[11px] flex items-center transition-all bg-white shrink-0"><svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Carta Baru</button>`;
         }
 
         function switchTab(name) {
@@ -1255,8 +1300,11 @@
                     const name = res.name.trim();
                     let userTabs = db_users[currentUser].tabs;
                     if(userTabs[name]) { openModal('Ralat', 'Nama carta ini telah wujud.', 'alert'); return; }
+                    
                     userTabs[name] = [];
                     flowchart_meta[name] = res.desc.trim();
+                    db_users[currentUser].tabOrder.push(name);
+                    
                     autoSave(); performSwitch(name);
                 }
             });
@@ -1275,9 +1323,22 @@
                     flowchart_meta[name] = res.desc.trim();
                     if(name !== oldName) delete flowchart_meta[oldName];
                     
+                    let tabOrder = db_users[currentUser].tabOrder;
+                    let idx = tabOrder.indexOf(oldName);
+                    if (idx !== -1) tabOrder[idx] = name;
+                    
                     activeTabName = name; autoSave(); renderTabs(); renderAll();
                 }
             });
+
+            const leftActions = document.getElementById('modal-actions-left');
+            if(leftActions) {
+                leftActions.innerHTML = `
+                    <button onclick="closeModal(false); setTimeout(() => deleteTab('${oldName}'), 300);" class="px-4 py-2 text-red-500 hover:bg-red-50 hover:text-red-700 rounded-lg font-bold text-[13px] transition-all flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> Padam Aktiviti
+                    </button>
+                `;
+            }
         }
 
         function deleteTab(name) {
@@ -1287,11 +1348,46 @@
                     delete userTabs[name];
                     delete flowchart_meta[name];
                     
+                    db_users[currentUser].tabOrder = db_users[currentUser].tabOrder.filter(t => t !== name);
+                    
                     if (Object.keys(userTabs).length === 0) {
                         activeTabName = null; steps = []; renderTabs(); renderAll();
-                    } else performSwitch(Object.keys(userTabs)[0]);
+                    } else performSwitch(db_users[currentUser].tabOrder[0]);
                     
                     autoSave();
+                }
+            });
+        }
+
+        function moveTab(name, direction) {
+            let tabOrder = db_users[currentUser].tabOrder;
+            if(!tabOrder) tabOrder = Object.keys(db_users[currentUser].tabs);
+
+            const index = tabOrder.indexOf(name);
+            if (index === -1) return;
+            
+            if (direction === 'left' && index > 0) {
+                [tabOrder[index - 1], tabOrder[index]] = [tabOrder[index], tabOrder[index - 1]];
+            } else if (direction === 'right' && index < tabOrder.length - 1) {
+                [tabOrder[index + 1], tabOrder[index]] = [tabOrder[index], tabOrder[index + 1]];
+            } else {
+                return;
+            }
+
+            db_users[currentUser].tabOrder = tabOrder;
+            renderTabs();
+            autoSave();
+        }
+
+        function openProfileSettings() {
+            let currentPass = db_users[currentUser].password || '';
+            let msg = currentPass ? 'Profil anda kini <b>dilindungi</b> kata laluan. Kosongkan kotak teks di bawah dan sahkannya untuk membuang kata laluan.' : 'Tetapkan kata laluan untuk mengelakkan orang lain menceroboh profil anda.';
+            
+            openModal('Tetapan Profil', msg, 'prompt-password', '', '', (res) => {
+                if (res !== false) {
+                    db_users[currentUser].password = res.name.trim(); 
+                    autoSave();
+                    openModal('Berjaya', 'Kata laluan profil telah dikemaskini.', 'alert');
                 }
             });
         }
@@ -1319,6 +1415,9 @@
             const box = document.getElementById('custom-modal-box');
             const inputsContainer = document.getElementById('modal-inputs-container');
             const actions = document.getElementById('modal-actions');
+            const leftActions = document.getElementById('modal-actions-left');
+            
+            if(leftActions) leftActions.innerHTML = '';
             
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-msg').innerHTML = msg;
@@ -1326,15 +1425,27 @@
             modalCallback = callback;
             
             box.className = 'bg-white rounded-2xl shadow-2xl p-6 w-[550px] max-w-[95%] transform scale-95 transition-transform duration-300 relative border-t-4 ' + (type === 'alert' ? 'border-red-500' : (type === 'confirm' ? 'border-orange-500' : 'border-blue-600'));
-            if(type === 'prompt' || type === 'prompt-meta') {
+            
+            if(type === 'prompt' || type === 'prompt-meta' || type === 'prompt-password') {
                 inputsContainer.classList.remove('hidden');
-                document.getElementById('modal-input').value = defaultValue || '';
+                
+                const modInput = document.getElementById('modal-input');
+                modInput.value = defaultValue || '';
+                modInput.type = (type === 'prompt-password') ? 'password' : 'text';
+                
+                const modLabel = document.getElementById('modal-input-label');
+                if(modLabel) modLabel.innerText = (type === 'prompt-password') ? 'Kata Laluan' : 'Nama Aktiviti';
+                
                 if (type === 'prompt-meta') {
                     document.getElementById('modal-desc-wrapper').classList.remove('hidden');
                     document.getElementById('modal-input-desc').value = defaultDesc || '';
-                } else document.getElementById('modal-desc-wrapper').classList.add('hidden');
-                setTimeout(() => document.getElementById('modal-input').focus(), 100);
-            } else inputsContainer.classList.add('hidden');
+                } else {
+                    document.getElementById('modal-desc-wrapper').classList.add('hidden');
+                }
+                setTimeout(() => modInput.focus(), 100);
+            } else {
+                inputsContainer.classList.add('hidden');
+            }
             
             const btnBase = "px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none ";
             if(type === 'alert') actions.innerHTML = `<button onclick="closeModal(true)" class="${btnBase} bg-blue-600 text-white hover:bg-blue-700 active:scale-95">OK, Faham</button>`;
@@ -1352,7 +1463,7 @@
                 modal.classList.add('hidden');
                 let val = result;
                 if(result === true && !document.getElementById('modal-inputs-container').classList.contains('hidden')) {
-                    val = !document.getElementById('modal-desc-wrapper').classList.contains('hidden') ? { name: document.getElementById('modal-input').value, desc: document.getElementById('modal-input-desc').value } : document.getElementById('modal-input').value;
+                    val = !document.getElementById('modal-desc-wrapper').classList.contains('hidden') ? { name: document.getElementById('modal-input').value, desc: document.getElementById('modal-input-desc').value } : { name: document.getElementById('modal-input').value };
                 }
                 if(modalCallback) modalCallback(val);
             }, 300);
