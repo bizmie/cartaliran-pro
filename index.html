@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembina Carta Alir (Pro) v2.00 ☁️</title>
+    <title>Pembina Carta Alir (Pro) v2.01 ☁️</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -216,6 +216,10 @@
                 </div>
             </div>
         </div>
+        
+        <div class="absolute bottom-5 text-blue-200/50 text-[10px] font-semibold tracking-widest uppercase pointer-events-none select-none">
+            Pembina Carta Alir Pro v2.01
+        </div>
     </div>
     <!-- TAMAT SKRIN LOG MASUK -->
 
@@ -228,7 +232,7 @@
                 <div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 border border-white rounded-full"></div>
             </div>
             <div>
-                <h1 class="text-xl font-black text-blue-900 tracking-tight flex items-center uppercase">Bina Carta Alir <span class="ml-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[10px] px-2 py-0.5 rounded shadow-sm font-bold tracking-widest">v2.00 CLOUD</span></h1>
+                <h1 class="text-xl font-black text-blue-900 tracking-tight flex items-center uppercase">Bina Carta Alir <span class="ml-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[10px] px-2 py-0.5 rounded shadow-sm font-bold tracking-widest">v2.01 CLOUD</span></h1>
                 <p class="text-xs font-semibold text-blue-500 mt-0.5 flex items-center gap-1">Sistem Pengurusan SOP Dalam Talian</p>
             </div>
         </div>
@@ -1141,7 +1145,11 @@
 
             let headerLabelsHtml = '';
             if(step.type === 'mula') {
-                headerLabelsHtml = `<div class="absolute w-full h-full flex items-center pointer-events-none z-0"><div class="${z1_Tanggungjawab} text-[10px] font-bold text-gray-500 tracking-wider uppercase text-left" style="color: #64748b !important;">TANGGUNGJAWAB</div><div class="${z_Space1} text-transparent select-none">&nbsp;</div><div class="${z2_Carta} text-[10px] font-bold text-gray-500 tracking-wider uppercase text-center" style="color: #64748b !important;">&nbsp;</div><div class="${z_Space2} text-transparent select-none">&nbsp;</div><div class="${z3_Proses} text-[10px] font-bold text-gray-500 tracking-wider uppercase text-left" style="color: #64748b !important;">PROSES KERJA</div><div class="${z_Space3} text-transparent select-none">&nbsp;</div><div class="${z4_Catatan} text-[10px] font-bold text-gray-500 tracking-wider uppercase text-left" style="color: #64748b !important;">CATATAN</div></div>`;
+                // SEMAKAN PINTAR: Adakah wujud sebarang teks catatan dalam carta ini ATAU sedang ditaip di draf?
+                let isCatatanExist = steps.some(s => s.masa && s.masa.trim() !== '') || (isDraft && step.masa && step.masa.trim() !== '');
+                let catatanHeaderLabel = isCatatanExist ? 'CATATAN' : '';
+                
+                headerLabelsHtml = `<div class="absolute w-full h-full flex items-center pointer-events-none z-0"><div class="${z1_Tanggungjawab} text-[10px] font-bold text-gray-500 tracking-wider uppercase text-left" style="color: #64748b !important;">TANGGUNGJAWAB</div><div class="${z_Space1} text-transparent select-none">&nbsp;</div><div class="${z2_Carta} text-[10px] font-bold text-gray-500 tracking-wider uppercase text-center" style="color: #64748b !important;">&nbsp;</div><div class="${z_Space2} text-transparent select-none">&nbsp;</div><div class="${z3_Proses} text-[10px] font-bold text-gray-500 tracking-wider uppercase text-left" style="color: #64748b !important;">PROSES KERJA</div><div class="${z_Space3} text-transparent select-none">&nbsp;</div><div class="${z4_Catatan} text-[10px] font-bold text-gray-500 tracking-wider uppercase text-left" style="color: #64748b !important;">${catatanHeaderLabel}</div></div>`;
             }
 
             let tanggungjawabHtml = step.tanggungJawab ? step.tanggungJawab.replace(/\n/g, '<br>') : '&nbsp;';
