@@ -1921,34 +1921,46 @@
         function executeChartPDF() {
             showExportOverlay("Mengeksport Carta (PDF)...");
             const scrollArea = document.getElementById('pratonton-scroll-area');
-            if (scrollArea) scrollArea.scrollTop = 0; 
+            let originalOverflow = '';
+            
+            if (scrollArea) {
+                scrollArea.scrollTop = 0;
+                originalOverflow = scrollArea.style.overflow;
+                scrollArea.style.overflow = 'visible'; // Buka kunci skrol
+            }
+            
+            drawLines();
             
             setTimeout(() => {
                 const element = document.getElementById('pdf-container');
                 const totalHeight = element.scrollHeight; 
 
-                html2canvas(element, { 
-                    scale: 2, 
-                    useCORS: true, 
-                    backgroundColor: '#ffffff',
-                    windowWidth: 1200, 
-                    windowHeight: totalHeight,
-                    height: totalHeight,
-                    y: 0
-                }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                    const wrapper = document.createElement('div');
-                    const img = document.createElement('img');
-                    img.src = imgData; img.style.width = '100%'; img.style.display = 'block'; wrapper.appendChild(img);
+                // Hantar terus elemen asal ke html2pdf tanpa menggunakan wrapper halimunan
+                const opt = {
+                    margin:       [0.15, 0.15, 0.15, 0.15],
+                    filename:     (activeTabName || 'Carta_Alir') + '.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { 
+                        scale: 2, 
+                        useCORS: true, 
+                        backgroundColor: '#ffffff',
+                        windowWidth: 1000,
+                        windowHeight: totalHeight,
+                        height: totalHeight,
+                        scrollX: 0,
+                        scrollY: 0,
+                        y: 0
+                    },
+                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                };
 
-                    const opt = {
-                        margin:       [0.15, 0.15, 0.15, 0.15],
-                        filename:     (activeTabName || 'Carta_Alir') + '.pdf',
-                        image:        { type: 'jpeg', quality: 0.98 },
-                        html2canvas:  { scale: 2 }, 
-                        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                    };
-                    html2pdf().set(opt).from(wrapper).save().then(() => { hideExportOverlay(); });
+                html2pdf().set(opt).from(element).save().then(() => {
+                    if (scrollArea) scrollArea.style.overflow = originalOverflow; // Kembalikan skrol selepas siap
+                    hideExportOverlay();
+                }).catch(err => {
+                    console.error("Ralat penjanaan PDF:", err);
+                    if (scrollArea) scrollArea.style.overflow = originalOverflow;
+                    hideExportOverlay();
                 });
             }, 800); 
         }
@@ -1956,20 +1968,33 @@
         function executeChartJPEG() {
             showExportOverlay("Menyediakan Imej Carta...");
             const scrollArea = document.getElementById('pratonton-scroll-area');
-            if (scrollArea) scrollArea.scrollTop = 0;
+            let originalOverflow = '';
+            
+            if (scrollArea) {
+                scrollArea.scrollTop = 0;
+                originalOverflow = scrollArea.style.overflow;
+                scrollArea.style.overflow = 'visible'; // Paksa bentang penuh tanpa skrol
+            }
+            
+            drawLines();
             
             setTimeout(() => {
                 const element = document.getElementById('pdf-container');
                 const totalHeight = element.scrollHeight; 
+                
                 html2canvas(element, { 
                     scale: 2, 
                     useCORS: true, 
                     backgroundColor: '#ffffff',
-                    windowWidth: 1200,
+                    windowWidth: 1000,
                     windowHeight: totalHeight,
                     height: totalHeight,
+                    scrollX: 0,
+                    scrollY: 0,
                     y: 0
                 }).then(canvas => {
+                    if (scrollArea) scrollArea.style.overflow = originalOverflow; // Kembalikan skrol
+                    
                     const imgData = canvas.toDataURL('image/jpeg', 0.95);
                     const link = document.createElement('a');
                     link.download = (activeTabName || 'Carta_Alir') + '.jpg';
